@@ -20,7 +20,7 @@ struct OSLogSpecTests {
             argumentArray: [category, subsystem]
         )
         let entries1 = try store.getEntries(with: .reverse, at: position, matching: predicate)
-        #expect(entries1.count(where: { _ in true }) == 0)
+        #expect(entries1.iteratedCount() == 0)
 
         let logger = Logger(
             subsystem: subsystem,
@@ -29,7 +29,7 @@ struct OSLogSpecTests {
         logger.debug("Hello, World!")
 
         let entries2 = try store.getEntries(with: .reverse, at: position, matching: predicate)
-        #expect(entries2.count(where: { _ in true }) == 1)
+        #expect(entries2.iteratedCount() == 1)
 
         // getEntriesしてもstoreからは消えない
         let entries3: some Sequence<OSLogEntry> = try store.getEntries(
@@ -37,9 +37,9 @@ struct OSLogSpecTests {
             at: position,
             matching: predicate
         )
-        #expect(entries3.count(where: { _ in true }) == 1)
+        #expect(entries3.iteratedCount() == 1)
         // ただし、iteratorを回した後はentriesから消える
-        #expect(entries3.count(where: { _ in true }) == 0)
+        #expect(entries3.iteratedCount() == 0)
     }
 
     @Test
@@ -128,5 +128,11 @@ struct OSLogSpecTests {
         var lines2 = contents2.components(separatedBy: .newlines)
         lines2.removeLast()  // empty line
         #expect(lines2.count == 4)
+    }
+}
+
+extension Sequence where Element: OSLogEntry {
+    func iteratedCount() -> Int {
+        count(where: { _ in true })
     }
 }
