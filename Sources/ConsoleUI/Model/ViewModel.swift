@@ -13,7 +13,7 @@ final class ViewModel {
 
   var logs: [Log] = []
   var inspectoringLog: Log? = nil
-
+    
   var error: (any Error)? = nil
 
   var isMetadataOn: Bool = true
@@ -72,15 +72,3 @@ final class ViewModel {
   }
 }
 
-extension ViewModel: @preconcurrency Transferable {
-  static var transferRepresentation: some TransferRepresentation {
-    FileRepresentation(exportedContentType: .text) {
-      let logs = await $0.logs
-      let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("export.log")
-      try logs.write(
-        to: url
-      )
-      return .init(url)
-    }
-  }
-}

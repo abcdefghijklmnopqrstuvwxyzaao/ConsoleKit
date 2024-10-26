@@ -34,7 +34,10 @@ public struct ConsoleView: View {
             FilterMenu(viewModel: viewModel)
           }
           ToolbarItem(placement: .primaryAction) {
-            ShareLink(item: viewModel, preview: .init("export.log"))
+              ShareLink(
+                item: Document(logs: viewModel.logs),
+                preview: SharePreview("Diagnostics Log")
+              )
               .disabled(viewModel.disabledShareLink)
           }
           ToolbarItem(placement: .secondaryAction) {
