@@ -32,6 +32,8 @@ final class ViewModel {
     var subsystem: String? = nil
     var category: String? = nil
     var query: String = ""
+    
+    var isExpanded: Bool = false
 
     var disabledShareLink: Bool {
         error != nil || logs.isEmpty

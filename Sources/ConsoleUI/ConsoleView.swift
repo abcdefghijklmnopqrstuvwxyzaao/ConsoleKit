@@ -22,6 +22,11 @@ public struct ConsoleView: View {
                     ToolbarItem(placement: .bottomBar) {
                         FilterMenu(viewModel: viewModel)
                     }
+                    ToolbarItem(placement: .bottomBar) {
+                        Toggle(isOn: $viewModel.isExpanded) {
+                            Image(systemName: "rectangle.expand.vertical")
+                        }
+                    }
                     ToolbarItem(placement: .primaryAction) {
                         ShareLink(
                             item: Document(logs: viewModel.logs),
