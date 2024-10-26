@@ -22,8 +22,8 @@ final class ViewModel {
     var isTimestampOn: Bool = true
     var isLibraryOn: Bool = false
     var isPIDTIDOn: Bool = false
-    var isSubsystemOn: Bool = false
-    var isCategoryOn: Bool = false
+    var isSubsystemOn: Bool = true
+    var isCategoryOn: Bool = true
 
     var filterTypes: Set<Log.Level> = [
         .error,
