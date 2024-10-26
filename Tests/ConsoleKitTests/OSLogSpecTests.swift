@@ -130,6 +130,35 @@ struct OSLogSpecTests {
         lines2.removeLast()  // empty line
         #expect(lines2.count == 4)
     }
+    
+    @Test
+    func privacy() async throws {
+        let store = try OSLogStore(scope: .currentProcessIdentifier)
+        let position = store.position(timeIntervalSinceLatestBoot: 0)
+
+        let subsystem = "dev.noppe.subsystem.test1"
+        let category = #function
+        let predicate = NSPredicate(
+            format: "category == %@ && subsystem == %@",
+            argumentArray: [category, subsystem]
+        )
+        let logger = Logger(
+            subsystem: subsystem,
+            category: category
+        )
+        let secret = "secret"
+        logger.debug("\(secret, privacy: .private)")
+
+        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("test.log")
+        try? FileManager.default.removeItem(at: url)
+
+        let entries = try store.getEntries(at: position, matching: predicate)
+            .compactMap({ $0 as? OSLogEntryLog })
+            .map({ Log(id: UUID(), entry: $0) })
+        
+        // マスクされない
+        #expect(entries[0].composedMessage == "secret")
+    }
 }
 
 extension Sequence where Element: OSLogEntry {
