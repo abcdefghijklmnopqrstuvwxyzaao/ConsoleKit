@@ -9,6 +9,7 @@ import os
 struct OSLogSpecTests {
     @Test
     func getEntries() async throws {
+        // このプロセスのLogStore（つまり、前回起動時は取得できない）
         let store = try OSLogStore(scope: .currentProcessIdentifier)
         // timeIntervalSinceLatestBootはアプリが起動してからのログ
         let position = store.position(timeIntervalSinceLatestBoot: 0)
