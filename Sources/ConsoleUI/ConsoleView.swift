@@ -3,17 +3,6 @@ import OSLog
 import SwiftUI
 import os
 
-public struct ConsoleConfiguration: Sendable {
-    public static let `default` = ConsoleConfiguration(subsystem: nil, category: nil)
-    public let subsystem: String?
-    public let category: String?
-
-    public init(subsystem: String?, category: String?) {
-        self.subsystem = subsystem
-        self.category = category
-    }
-}
-
 public struct ConsoleView: View {
     @State
     var viewModel: ViewModel
