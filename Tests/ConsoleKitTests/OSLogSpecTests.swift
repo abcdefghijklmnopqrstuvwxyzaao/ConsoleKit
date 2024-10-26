@@ -105,7 +105,7 @@ struct OSLogSpecTests {
 
         let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("test.log")
         try? FileManager.default.removeItem(at: url)
-        
+
         let entries = try store.getEntries(at: position, matching: predicate)
             .compactMap({ $0 as? OSLogEntryLog })
             .map({ Log(id: UUID(), entry: $0) })
