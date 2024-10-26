@@ -7,21 +7,21 @@ struct MetadataMenu: View {
     var body: some View {
         Menu {
             Toggle(isOn: $viewModel.isMetadataOn) {
-                Text("Metadata")
+                Text("Metadata", bundle: .module)
             }
 
             Section {
                 Toggle(isOn: $viewModel.isTypeOn) {
-                    Text("Type")
+                    Text("Type", bundle: .module)
                 }
 
                 Toggle(isOn: $viewModel.isTimestampOn) {
-                    Text("Timestamp")
+                    Text("Timestamp", bundle: .module)
                 }
 
                 Toggle(isOn: $viewModel.isLibraryOn) {
                     Label {
-                        Text("Library")
+                        Text("Library", bundle: .module)
                     } icon: {
                         Image(systemName: "building.columns")
                     }
@@ -29,7 +29,7 @@ struct MetadataMenu: View {
 
                 Toggle(isOn: $viewModel.isPIDTIDOn) {
                     Label {
-                        Text("PID:TID")
+                        Text("PID:TID", bundle: .module)
                     } icon: {
                         Image(systemName: "tag")
                     }
@@ -37,7 +37,7 @@ struct MetadataMenu: View {
 
                 Toggle(isOn: $viewModel.isSubsystemOn) {
                     Label {
-                        Text("Subsystem")
+                        Text("Subsystem", bundle: .module)
                     } icon: {
                         Image(systemName: "gearshape.2")
                     }
@@ -45,7 +45,7 @@ struct MetadataMenu: View {
 
                 Toggle(isOn: $viewModel.isCategoryOn) {
                     Label {
-                        Text("Category")
+                        Text("Category", bundle: .module)
                     } icon: {
                         Image(systemName: "circle.grid.3x3")
                     }

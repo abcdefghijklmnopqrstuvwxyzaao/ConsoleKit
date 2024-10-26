@@ -36,7 +36,7 @@ public struct ConsoleView: View {
                     ToolbarItem(placement: .primaryAction) {
                         ShareLink(
                             item: Document(logs: viewModel.logs),
-                            preview: SharePreview("Diagnostics Log")
+                            preview: SharePreview(Text("Diagnostics Log", bundle: .module))
                         )
                         .disabled(viewModel.disabledShareLink)
                     }
@@ -47,7 +47,7 @@ public struct ConsoleView: View {
                             }
                         } label: {
                             Label {
-                                Text("Reload")
+                                Text("Reload", bundle: .module)
                             } icon: {
                                 Image(systemName: "arrow.clockwise")
                             }
@@ -58,7 +58,7 @@ public struct ConsoleView: View {
                             viewModel.logs = []
                         } label: {
                             Label {
-                                Text("Clear")
+                                Text("Clear", bundle: .module)
                             } icon: {
                                 Image(systemName: "xmark.circle")
                             }
@@ -130,6 +130,6 @@ public struct ConsoleView: View {
             }
         }
         .listStyle(.plain)
-        .searchable(text: $viewModel.query, prompt: "Filter")
+        .searchable(text: $viewModel.query, prompt: Text("Filter", bundle: .module))
     }
 }

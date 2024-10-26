@@ -24,26 +24,26 @@ struct FilterMenu: View {
         Menu {
             Section {
                 Toggle(isOn: isOn(.debug)) {
-                    Text("Debug")
+                    Text("Debug", bundle: .module)
                 }
 
                 Toggle(isOn: isOn(.info)) {
-                    Text("Info")
+                    Text("Info", bundle: .module)
                 }
 
                 Toggle(isOn: isOn(.notice)) {
-                    Text("Notice")
+                    Text("Notice", bundle: .module)
                 }
 
                 Toggle(isOn: isOn(.error)) {
-                    Text("Error")
+                    Text("Error", bundle: .module)
                 }
 
                 Toggle(isOn: isOn(.fault)) {
-                    Text("Fault")
+                    Text("Fault", bundle: .module)
                 }
             } header: {
-                Text("Type")
+                Text("Type", bundle: .module)
             }
 
             if let subsystem = viewModel.subsystem {
@@ -57,8 +57,8 @@ struct FilterMenu: View {
                 )
 
                 Toggle(isOn: isOn) {
-                    Text("Subsystem")
-                    Text("\(subsystem)")
+                    Text("Subsystem", bundle: .module)
+                    Text(subsystem)
                 }
             }
 
@@ -73,8 +73,8 @@ struct FilterMenu: View {
                 )
 
                 Toggle(isOn: isOn) {
-                    Text("Category")
-                    Text("\(category)")
+                    Text("Category", bundle: .module)
+                    Text(category)
                 }
             }
         } label: {

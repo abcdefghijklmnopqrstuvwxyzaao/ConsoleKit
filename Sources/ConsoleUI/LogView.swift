@@ -30,13 +30,13 @@ struct LogView: View {
                 Button {
                     UIPasteboard.general.string = log.description
                 } label: {
-                    Text("Copy Row without Metadata")
+                    Text("Copy Row without Metadata", bundle: .module)
                 }
 
                 Button {
                     UIPasteboard.general.string = log.composedMessage
                 } label: {
-                    Text("Copy Row with All Metadata")
+                    Text("Copy Row with All Metadata", bundle: .module)
                 }
             }
 
@@ -44,14 +44,14 @@ struct LogView: View {
                 Button {
                     viewModel.category = log.category
                 } label: {
-                    Text("Category")
+                    Text("Category", bundle: .module)
                     Text("'\(log.category)'")
                 }
 
                 Button {
                     viewModel.subsystem = log.subsystem
                 } label: {
-                    Text("Subsystem")
+                    Text("Subsystem", bundle: .module)
                     Text("'\(log.subsystem)'")
                 }
             }
@@ -82,9 +82,8 @@ struct LogView: View {
 
         if viewModel.isPIDTIDOn {
             Label {
-                let pid = Text(log.processIdentifier.formatted(.number.grouping(.never)))
-                let tid = Text(String(format: "%#llx", log.threadIdentifier))
-                (pid + Text(":") + tid).truncationMode(.middle)
+                Text(log.pidtid)
+                    .truncationMode(.middle)
             } icon: {
                 Image(systemName: "tag")
             }

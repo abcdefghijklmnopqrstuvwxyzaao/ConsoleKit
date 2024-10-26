@@ -7,12 +7,36 @@ struct InspectorView: View {
     var body: some View {
         if let log {
             List {
-                LabeledContent("Type", value: log.level.rawValue.capitalized)
-                LabeledContent("Timestamp", value: log.date.formatted())
-                LabeledContent("Library", value: log.process)
-                LabeledContent("PID : TID", value: log.pidtid)
-                LabeledContent("Subsystem", value: log.subsystem)
-                LabeledContent("Category", value: log.category)
+                LabeledContent {
+                    Text(log.level.rawValue.capitalized)
+                } label: {
+                    Text("Type", bundle: .module)
+                }
+                LabeledContent {
+                    Text(log.date.formatted())
+                } label: {
+                    Text("Timestamp", bundle: .module)
+                }
+                LabeledContent {
+                    Text(log.process)
+                } label: {
+                    Text("Library", bundle: .module)
+                }
+                LabeledContent {
+                    Text(log.pidtid)
+                } label: {
+                    Text("PID : TID", bundle: .module)
+                }
+                LabeledContent {
+                    Text(log.subsystem)
+                } label: {
+                    Text("Subsystem", bundle: .module)
+                }
+                LabeledContent {
+                    Text(log.category)
+                } label: {
+                    Text("Category", bundle: .module)
+                }
             }
         }
     }
