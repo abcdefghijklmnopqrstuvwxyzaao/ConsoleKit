@@ -37,39 +37,61 @@ final class ViewModel {
         error != nil || logs.isEmpty
     }
 
-    func getDocument() async {
+    nonisolated func getDocument() async {
+        func makePredicate(
+            subsystem: String?,
+            category: String?,
+            query: String,
+            filterTypes: Set<Log.Level>
+        ) -> NSPredicate? {
+            var predicates: [NSPredicate] = []
+            if let subsystem {
+                predicates.append(NSPredicate(format: "subsystem == %@", subsystem))
+            }
+            if let category {
+                predicates.append(NSPredicate(format: "category == %@", category))
+            }
+            if !query.isEmpty {
+                predicates.append(NSPredicate(format: "eventMessage CONTAINS %@", query))
+            }
+
+            let levelPredicate = NSCompoundPredicate(
+                orPredicateWithSubpredicates: filterTypes.map { level in
+                    NSPredicate(format: "messageType == %@", level.messageType)
+                }
+            )
+            predicates.append(levelPredicate)
+
+            return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        }
+        
         do {
             let store = try OSLogStore(scope: .currentProcessIdentifier)
             let position = store.position(timeIntervalSinceLatestBoot: 0)
+            let predicate = await makePredicate(
+                subsystem: subsystem,
+                category: category,
+                query: query,
+                filterTypes: filterTypes
+            )
             let entries = try store.getEntries(at: position, matching: predicate)
             let logs = entries.compactMap({ $0 as? OSLogEntryLog })
                 .map({ Log(id: UUID(), entry: $0) })
-            self.logs = logs
-            self.error = nil
-        } catch {
-            self.error = error
-        }
-    }
-
-    var predicate: NSPredicate? {
-        var predicates: [NSPredicate] = []
-        if let subsystem {
-            predicates.append(NSPredicate(format: "subsystem == %@", subsystem))
-        }
-        if let category {
-            predicates.append(NSPredicate(format: "category == %@", category))
-        }
-        if !query.isEmpty {
-            predicates.append(NSPredicate(format: "eventMessage CONTAINS %@", query))
-        }
-
-        let levelPredicate = NSCompoundPredicate(
-            orPredicateWithSubpredicates: filterTypes.map { level in
-                NSPredicate(format: "messageType == %@", level.messageType)
+            await MainActor.run {
+                self.logs = logs
+                self.error = nil
             }
-        )
-        predicates.append(levelPredicate)
-
-        return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        } catch {
+            await MainActor.run {
+                self.error = error
+            }
+        }
     }
+}
+
+@globalActor
+struct TestActor {
+  actor ActorType { }
+
+  static let shared: ActorType = ActorType()
 }
