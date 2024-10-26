@@ -83,5 +83,4 @@ struct FilterMenu: View {
         .menuOrder(.fixed)
         .menuActionDismissBehavior(.disabled)
     }
-
 }

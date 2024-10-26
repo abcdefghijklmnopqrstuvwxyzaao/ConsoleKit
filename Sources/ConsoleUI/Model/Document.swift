@@ -1,12 +1,12 @@
 import ConsoleCore
 import CoreTransferable
 
-struct Document: @preconcurrency Transferable {
+struct Document: Transferable {
     let logs: [Log]
 
     static var transferRepresentation: some TransferRepresentation {
         FileRepresentation(exportedContentType: .log) {
-            let logs = await $0.logs
+            let logs = $0.logs
 
             let url = URL(
                 fileURLWithPath: NSTemporaryDirectory()

@@ -1,6 +1,6 @@
 import Foundation
 
-package struct Log: Identifiable, Sendable {
+package struct Log: Identifiable, Sendable, Codable {
     package let id: UUID
     package let date: Date
     package let composedMessage: String
@@ -12,13 +12,14 @@ package struct Log: Identifiable, Sendable {
     package let threadIdentifier: UInt64
 
     package var pidtid: String {
-        processIdentifier.formatted(.number.grouping(.never)) + ":"
-            + String(format: "%#llx", threadIdentifier)
+        let pid = processIdentifier.formatted(.number.grouping(.never))
+        let tid = String(format: "%#llx", threadIdentifier)
+        return "\(pid):\(tid)"
     }
 }
 
 extension Log {
-    package enum Level: String, CaseIterable {
+    package enum Level: String, CaseIterable, Codable {
         case debug
         case info
         case notice
@@ -26,7 +27,7 @@ extension Log {
         case fault
         case unknown
 
-        // workaround:  For logEvent and traceEvent, the type of the message itself: default, info, debug, error or fault.
+        // workaround: For logEvent and traceEvent, the type of the message itself: default, info, debug, error or fault.
         package var messageType: String {
             switch self {
             case .debug: rawValue
@@ -37,23 +38,6 @@ extension Log {
             case .unknown: "default"
             }
         }
-    }
-}
-
-extension Log: CustomStringConvertible {
-    package var description: String {
-        let metadata = [
-            "Type: \(level.rawValue.capitalized)",
-            "Timestamp: \(date.formatted())",
-            "Process: \(process)",
-            "Subsystem: \(subsystem)",
-            "Category: \(category)",
-            "TID: \(String(format: "%#llx", threadIdentifier))",
-        ]
-        return """
-            \(composedMessage)
-            \(metadata.joined(separator: " | "))
-            """
     }
 }
 
@@ -71,7 +55,7 @@ extension Sequence where Element == Log {
         fileHandle.seekToEndOfFile()
 
         for log in suffix(maxLength) {
-            let data = Data(log.description.utf8)
+            let data = Data(log.formatted(.diagnostics).utf8)
             try fileHandle.write(contentsOf: data)
             try fileHandle.write(contentsOf: Data("\n".utf8))
         }

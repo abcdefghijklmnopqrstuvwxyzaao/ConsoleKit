@@ -3,7 +3,7 @@ import OSLog
 import Testing
 import os
 
-@testable import ReportCore
+@testable import ConsoleCore
 
 @Suite
 struct OSLogSpecTests {
@@ -73,7 +73,7 @@ struct OSLogSpecTests {
         print("threadIdentifier:", logEntry.threadIdentifier)
         print("category:", logEntry.category)
         print("subsystem:", logEntry.subsystem)
-        print("level:", logEntry.level.formatted())
+        print("level:", logEntry.level)
         #expect(logEntry.level == .debug)
         #expect((iterator.next() as! OSLogEntryLog).level == .info)
         #expect((iterator.next() as! OSLogEntryLog).level == .notice)
@@ -105,11 +105,13 @@ struct OSLogSpecTests {
 
         let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("test.log")
         try? FileManager.default.removeItem(at: url)
+        
+        let entries = try store.getEntries(at: position, matching: predicate)
+            .compactMap({ $0 as? OSLogEntryLog })
+            .map({ Log(id: UUID(), entry: $0) })
 
-        try store.write(
+        try entries.write(
             to: url,
-            at: position,
-            matching: predicate,
             maxLength: 2
         )
         let contents = try String(contentsOf: url, encoding: .utf8)
@@ -118,10 +120,8 @@ struct OSLogSpecTests {
         #expect(lines.count == 2)
 
         // append file
-        try store.write(
+        try entries.write(
             to: url,
-            at: position,
-            matching: predicate,
             maxLength: 2
         )
         let contents2 = try String(contentsOf: url, encoding: .utf8)

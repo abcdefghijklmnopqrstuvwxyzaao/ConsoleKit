@@ -28,13 +28,13 @@ struct LogView: View {
         .contextMenu(menuItems: {
             Section {
                 Button {
-                    UIPasteboard.general.string = log.description
+                    UIPasteboard.general.string = log.composedMessage
                 } label: {
                     Text("Copy Row without Metadata", bundle: .module)
                 }
 
                 Button {
-                    UIPasteboard.general.string = log.composedMessage
+                    UIPasteboard.general.string = log.formatted(.withMetadata)
                 } label: {
                     Text("Copy Row with All Metadata", bundle: .module)
                 }
