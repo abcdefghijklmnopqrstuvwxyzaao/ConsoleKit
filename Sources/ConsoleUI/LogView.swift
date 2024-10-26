@@ -12,7 +12,7 @@ struct LogView: View {
             Text(log.composedMessage)
                 .monospaced()
                 .font(.callout)
-                .lineLimit(viewModel.isExpanded ? nil : 2)
+                .lineLimit(viewModel.isExpanded ? nil : 4)
 
             if viewModel.isMetadataOn {
                 HStack {
