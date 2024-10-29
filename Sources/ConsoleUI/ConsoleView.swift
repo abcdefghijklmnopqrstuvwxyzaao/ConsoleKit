@@ -60,9 +60,15 @@ public struct ConsoleView: View {
                     }
                 }
         })
+        #if os(iOS)
         .inspector(isPresented: isInspectorPresented) {
             InspectorView(log: viewModel.inspectoringLog)
         }
+        #elseif os(visionOS)
+        .ornament(attachmentAnchor: .scene(.trailing)) {
+            InspectorView(log: viewModel.inspectoringLog)
+        }
+        #endif
     }
 
     var isInspectorPresented: Binding<Bool> {

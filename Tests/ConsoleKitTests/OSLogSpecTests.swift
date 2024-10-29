@@ -42,6 +42,60 @@ struct OSLogSpecTests {
         // ただし、iteratorを回した後はentriesから消える
         #expect(entries3.iteratedCount() == 0)
     }
+    
+    @Test(arguments: [
+        OSLogEnumerator.Options(rawValue: 0),
+        OSLogEnumerator.Options(rawValue: 1) // reverse
+    ])
+    func sequenceNotAppendAfterGet(
+        _ option: OSLogEnumerator.Options
+    ) async throws {
+        // このプロセスのLogStore（つまり、前回起動時は取得できない）
+        let store = try OSLogStore(scope: .currentProcessIdentifier)
+        // timeIntervalSinceLatestBootはアプリが起動してからのログ
+        let position = store.position(timeIntervalSinceLatestBoot: 0)
+
+        let subsystem = "dev.noppe.subsystem.test1"
+        let category = #function
+        let predicate = NSPredicate(
+            format: "category == %@ && subsystem == %@",
+            argumentArray: [category, subsystem]
+        )
+        let entries = try store.getEntries(with: option, at: position, matching: predicate)
+        let iterator = entries.makeIterator()
+        #expect(iterator.next() == nil)
+
+        let logger = Logger(
+            subsystem: subsystem,
+            category: category
+        )
+        logger.debug("Hello, World!")
+        #expect(iterator.next() == nil)
+    }
+    
+    @Test
+    func positionNotWorking() async throws {
+        // このプロセスのLogStore（つまり、前回起動時は取得できない）
+        let store = try OSLogStore(scope: .currentProcessIdentifier)
+        // timeIntervalSinceLatestBootはアプリが起動してからのログ
+        let position = store.position(timeIntervalSinceLatestBoot: 100)
+
+        let subsystem = "dev.noppe.subsystem.test1"
+        let category = #function
+        let predicate = NSPredicate(
+            format: "category == %@ && subsystem == %@",
+            argumentArray: [category, subsystem]
+        )
+        let logger = Logger(
+            subsystem: subsystem,
+            category: category
+        )
+        logger.debug("Hello, World!")
+        
+        let entries = try store.getEntries(at: position, matching: predicate)
+        let iterator = entries.makeIterator()
+        #expect(iterator.next() != nil)
+    }
 
     @Test
     func getOSLogEntryLog() async throws {
