@@ -16,17 +16,35 @@ public struct ConsoleView: View {
             contentView
                 .navigationTitle(Text("Console", bundle: .module))
                 .toolbar {
+#if os(iOS)
                     ToolbarItem(placement: .bottomBar) {
                         MetadataMenu(viewModel: viewModel)
                     }
                     ToolbarItem(placement: .bottomBar) {
                         FilterMenu(viewModel: viewModel)
                     }
+#elseif os(macOS)
+                  ToolbarItem(placement: .automatic) {
+                      MetadataMenu(viewModel: viewModel)
+                  }
+                  ToolbarItem(placement: .automatic) {
+                      FilterMenu(viewModel: viewModel)
+                  }
+#endif
+#if os(iOS) || os(watchOS)
                     ToolbarItem(placement: .bottomBar) {
                         Toggle(isOn: $viewModel.isExpanded) {
                             Image(systemName: "rectangle.expand.vertical")
                         }
                     }
+#elseif os (macOS)
+                  ToolbarItem(placement: .automatic) {
+                      Toggle(isOn: $viewModel.isExpanded) {
+                          Image(systemName: "rectangle.expand.vertical")
+                      }
+                  }
+#endif
+
                     ToolbarItem(placement: .primaryAction) {
                         ShareLink(
                             item: Document(logs: viewModel.logs),
@@ -34,6 +52,7 @@ public struct ConsoleView: View {
                         )
                         .disabled(viewModel.disabledShareLink)
                     }
+#if os(iOS) || os(macOS)
                     ToolbarItem(placement: .secondaryAction) {
                         Button {
                             Task {
@@ -58,6 +77,7 @@ public struct ConsoleView: View {
                             }
                         }
                     }
+#endif
                 }
         })
         #if os(iOS)

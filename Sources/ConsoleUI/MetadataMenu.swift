@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(watchOS, unavailable)
 struct MetadataMenu: View {
     @State
     var viewModel: ViewModel
@@ -56,7 +57,9 @@ struct MetadataMenu: View {
             Image(systemName: "switch.2")
         }
         .menuOrder(.fixed)
+#if os(iOS)
         .menuActionDismissBehavior(.disabled)
+#endif
     }
 }
 

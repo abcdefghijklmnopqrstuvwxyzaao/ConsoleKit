@@ -26,6 +26,7 @@ struct LogView: View {
                 .lineLimit(1)
             }
         }
+#if os(iOS)
         .contextMenu(menuItems: {
             Section {
                 Button {
@@ -57,6 +58,7 @@ struct LogView: View {
                 }
             }
         })
+#endif
         .listRowBackground(viewModel.isMetadataOn ? log.level.tintColor.opacity(0.1) : nil)
     }
 

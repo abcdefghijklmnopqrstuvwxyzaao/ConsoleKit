@@ -1,6 +1,6 @@
 import ConsoleCore
 import SwiftUI
-
+@available(watchOS, unavailable)
 struct FilterMenu: View {
     @State
     var viewModel: ViewModel
@@ -81,6 +81,8 @@ struct FilterMenu: View {
             Image(systemName: "line.3.horizontal.decrease.circle")
         }
         .menuOrder(.fixed)
+      #if os(iOS)
         .menuActionDismissBehavior(.disabled)
+      #endif
     }
 }
